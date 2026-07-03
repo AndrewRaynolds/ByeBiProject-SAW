@@ -1,6 +1,6 @@
-# Architettura ByeBi - versione esame SAW
+# Architettura ByeBi — progetto esame SAW
 
-Questo documento sintetizza la struttura della branch `exam-saw`, preparata per la consegna dell'esame integrativo di Sviluppo Applicazioni Web.
+Questo documento sintetizza la struttura della versione pubblicata per la consegna dell'esame integrativo di Sviluppo Applicazioni Web.
 
 ## Visione generale
 
@@ -22,7 +22,7 @@ flowchart TD
     PROVIDERS --> QUERY[React Query Provider]
     PROVIDERS --> LANG[LanguageProvider]
 
-    APP --> ROUTER[Routing Wouter]
+    PROVIDERS --> ROUTER[Routing Wouter]
     ROUTER --> PUB[Pagine pubbliche]
     ROUTER --> PRIV[Rotte protette]
 
@@ -36,7 +36,7 @@ flowchart TD
     PROTECTED --> DASH[Dashboard]
 
     AUTH --> SUPA[Supabase Auth]
-    PROTECTED --> SUPA
+    PROTECTED --> AUTH
 
     FE --> API[Backend Express /api]
 
@@ -83,7 +83,7 @@ Responsabilità:
 
 - recuperare la sessione corrente;
 - ascoltare i cambiamenti di autenticazione;
-- esporre `user`, `session` e `loading`;
+- esporre `user`, `isLoading`, `isAuthenticated` e lo stato degli errori;
 - fornire funzioni di login, registrazione e logout.
 
 ## Rotte protette
@@ -122,9 +122,7 @@ Responsabilità:
 
 ## API esterne
 
-Il progetto contiene più integrazioni. Per l'orale non è necessario mostrarle tutte.
-
-Le più utili da spiegare sono:
+Il progetto contiene le seguenti integrazioni principali:
 
 | Servizio | Uso nel progetto |
 | --- | --- |
@@ -135,7 +133,7 @@ Le più utili da spiegare sono:
 | Printful | Prodotti e merchandising |
 | Workflow esterni | Automazioni opzionali tramite webhook |
 
-Per la demo d'esame è consigliabile concentrarsi su **una sola API esterna**, ad esempio Aviasales o Amadeus, e spiegare il flusso:
+Il flusso generale di comunicazione con i servizi esterni è:
 
 ```txt
 Frontend -> richiesta HTTP -> backend Express -> servizio esterno -> risposta JSON -> rendering nel frontend
@@ -157,13 +155,12 @@ Lo storage lato server si trova in:
 server/storage.ts
 ```
 
-Nella versione attuale alcune entità sono gestite tramite storage in memoria o astrazioni interne.
+Le entità applicative sono gestite da `MemStorage`, un'implementazione in memoria
+basata sui tipi definiti nello schema condiviso.
 
-## Scope della versione d'esame
+## Requisiti coperti
 
-Questa branch non deve dimostrare l'intero prodotto commerciale.
-
-Lo scope corretto per l'esame è:
+La versione d'esame comprende:
 
 1. React come framework frontend;
 2. routing lato client;
@@ -172,26 +169,3 @@ Lo scope corretto per l'esame è:
 5. backend Express;
 6. almeno una chiamata API esterna;
 7. repository pubblico con README e istruzioni di avvio.
-
-## Cosa NON enfatizzare all'orale
-
-Evitare di presentare ByeBi come prodotto completo, e-commerce completo o startup definitiva.
-
-La presentazione corretta è:
-
-> ByeBi è una web app full-stack per pianificare eventi/viaggi, sviluppata con React ed Express. Per l'esame mostro autenticazione, routing, dashboard protetta e comunicazione con API esterne.
-
-## Scaletta consigliata per l'orale
-
-```txt
-1. Obiettivo dell'applicazione
-2. Stack tecnologico
-3. Architettura generale
-4. Frontend React e routing
-5. Autenticazione Supabase
-6. ProtectedRoute e dashboard
-7. Backend Express
-8. Esempio di API esterna
-9. Schema dati/storage
-10. Limiti e possibili sviluppi
-```
